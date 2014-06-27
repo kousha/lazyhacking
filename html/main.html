@@ -1,0 +1,41 @@
+<html>
+<head>
+<script type="text/javascript" src="/_ah/channel/jsapi"></script>
+</head>
+<body>
+<div id="main"></div>
+<script>
+key = '{{.key}}';
+token = '{{.token}}';
+channel = new goog.appengine.Channel(token);
+socket = channel.open();
+socket.onopen = onOpened;
+socket.onmessage = onMessage;
+socket.onerror = onError;
+socket.onclose = onClose;
+
+function onOpened() {
+  document.getElementById("main").innerHTML+= "onOpened"
+  document.getElementById("main").innerHTML+= "<br />"
+  document.getElementById("main").innerHTML+= "key: " + key
+  document.getElementById("main").innerHTML+= "<br />"
+  document.getElementById("main").innerHTML+= "token: " + token
+  document.getElementById("main").innerHTML+= "<br />"
+}
+
+function onMessage(message) {
+  document.getElementById("main").innerHTML+= message.data
+  document.getElementById("main").innerHTML+= "<br />"
+}
+
+function onError(error) {
+  alert("error: " + error);
+}
+
+function onClose() {
+  document.getElementById("main").innerHTML+= "onClose"
+  document.getElementById("main").innerHTML+= "<br />"
+}
+</script>
+</body>
+</html>
