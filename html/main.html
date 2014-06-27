@@ -6,8 +6,11 @@
 <img src="https://chart.googleapis.com/chart?cht=qr&choe=UTF-8&chs=256x256&chl={{.key}}" alt="{{.key}}"></img>
 <div id="main"></div>
 <script>
-key = '{{.key}}';
-token = '{{.token}}';
+key = "{{.key}}";
+token = "{{.token}}";
+
+curl = "curl " + document.location.origin + "/send?key=" + key + "\\&message=yo";
+
 channel = new goog.appengine.Channel(token);
 socket = channel.open();
 socket.onopen = onOpened;
@@ -16,6 +19,8 @@ socket.onerror = onError;
 socket.onclose = onClose;
 
 function onOpened() {
+  document.getElementById("main").innerHTML+= curl
+  document.getElementById("main").innerHTML+= "<br />"
   document.getElementById("main").innerHTML+= "onOpened"
   document.getElementById("main").innerHTML+= "<br />"
   document.getElementById("main").innerHTML+= "key: " + key
