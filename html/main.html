@@ -18,20 +18,23 @@ socket.onmessage = onMessage;
 socket.onerror = onError;
 socket.onclose = onClose;
 
+function append(str, type) {
+  type = type || "P";
+  var div = document.getElementById("main");
+  var p = document.createElement(type);
+  p.appendChild(document.createTextNode(str));
+  div.appendChild(p);
+}
+
 function onOpened() {
-  document.getElementById("main").innerHTML+= curl
-  document.getElementById("main").innerHTML+= "<br />"
-  document.getElementById("main").innerHTML+= "onOpened"
-  document.getElementById("main").innerHTML+= "<br />"
-  document.getElementById("main").innerHTML+= "key: " + key
-  document.getElementById("main").innerHTML+= "<br />"
-  document.getElementById("main").innerHTML+= "token: " + token
-  document.getElementById("main").innerHTML+= "<br />"
+  append(curl, "CODE");
+  append("onOpened");
+  append("key: " + key);
+  append("token: " + token);
 }
 
 function onMessage(message) {
-  document.getElementById("main").innerHTML+= message.data
-  document.getElementById("main").innerHTML+= "<br />"
+  append(message.data);
 }
 
 function onError(error) {
@@ -39,8 +42,7 @@ function onError(error) {
 }
 
 function onClose() {
-  document.getElementById("main").innerHTML+= "onClose"
-  document.getElementById("main").innerHTML+= "<br />"
+  append("onClose");
 }
 </script>
 </body>
