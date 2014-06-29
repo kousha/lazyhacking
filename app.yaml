@@ -11,5 +11,9 @@ handlers:
   static_files: static/images/favicon.ico
   upload: static/images/favicon\.ico
 
+- url: /app\.apk
+  static_files: static/apks/app.apk
+  upload: static/apks/app\.apk
+
 - url: /.*
   script: _go_app

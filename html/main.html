@@ -4,6 +4,10 @@
 </head>
 <body>
 <img src="https://chart.googleapis.com/chart?cht=qr&choe=UTF-8&chs=256x256&chl={{.key}}" alt="{{.key}}"></img>
+<br />
+<code>{{.key}}</code>
+<br />
+<p><a href="https://lazyhacking.appspot.com/apk.apk">Download the APK</a></p>
 <div id="main"></div>
 <script>
 key = "{{.key}}";
@@ -28,9 +32,7 @@ function append(str, type) {
 
 function onOpened() {
   append(curl, "CODE");
-  append("onOpened");
-  append("key: " + key);
-  append("token: " + token);
+  append("Channel opened.");
 }
 
 function onMessage(message) {
@@ -38,10 +40,10 @@ function onMessage(message) {
 }
 
 function onError(error) {
-  append("error: " + JSON.stringify(error, null, 2)); }
+  append("Channel error: " + JSON.stringify(error, null, 2)); }
 
 function onClose() {
-  append("onClose");
+  append("Channel closed.");
 }
 </script>
 </body>
