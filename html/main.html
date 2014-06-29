@@ -38,8 +38,7 @@ function onMessage(message) {
 }
 
 function onError(error) {
-  alert("error: " + error);
-}
+  append("error: " + JSON.stringify(error, null, 2)); }
 
 function onClose() {
   append("onClose");
