@@ -7,13 +7,21 @@
 <br />
 <code>{{.key}}</code>
 <br />
-<p><a href="https://lazyhacking.appspot.com/app.apk">Download the APK</a></p>
-<div id="main"></div>
+<a href="#{{.key}}" target="_blank">remote</a>
+<br />
+<div id="input" hidden>
+<input id="input_text" type="text" onkeydown="if (event.keyCode == 13) send();"/><input type="button" value="Send" onClick="send();" />
+</div>
+
+<p><a href="/app.apk">Download the APK</a></p>
+<table id="main"></table>
 <script>
 key = "{{.key}}";
 token = "{{.token}}";
+remote_key = "";
 
-curl = "curl " + document.location.origin + "/send?key=" + key + "\\&message=yo";
+num_message = 0;
+SEND_URL = document.location.origin + "/send";
 
 channel = new goog.appengine.Channel(token);
 socket = channel.open();
@@ -22,21 +30,65 @@ socket.onmessage = onMessage;
 socket.onerror = onError;
 socket.onclose = onClose;
 
+if (location.hash) {
+  setRemoteKey(location.hash.split("#")[1]);
+  send("key="+key);
+}
+
+function setRemoteKey(new_key) {
+  remote_key = new_key;
+  var input = document.getElementById("input");
+  input.hidden = false;
+}
+
+function send(text) {
+  var text = text || document.getElementById("input_text").value;
+  document.getElementById("input_text").value = "";
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", SEND_URL, true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+
+  var result_id = append(text);
+  xhr.onreadystatechange=function(){
+    if (xhr.readyState==4 && xhr.status==200) {
+      document.getElementById(result_id).innerHTML="&#10003;";
+    }
+  }
+  xhr.send("key=" + encodeURIComponent(remote_key) +
+      "&message="+encodeURIComponent(text));
+}
+
 function append(str, type) {
   type = type || "P";
   var div = document.getElementById("main");
+  var row = document.createElement("TR");
+  var col1 = document.createElement("TD");
+  var col2 = document.createElement("TD");
+  col2.id = "message_" + num_message;
+  num_message += 1;
   var p = document.createElement(type);
   p.appendChild(document.createTextNode(str));
-  div.appendChild(p);
+  col1.appendChild(p);
+  row.appendChild(col1);
+  row.appendChild(col2);
+  div.appendChild(row);
+  return col2.id;
 }
 
 function onOpened() {
+  curl = "curl " + SEND_URL + "?key=" + key + "\\&message=yo";
   append(curl, "CODE");
   append("Channel opened.");
 }
 
 function onMessage(message) {
-  append(message.data);
+  data = JSON.parse(message.data);
+  if (data.lastIndexOf("key", 0) === 0) {
+    setRemoteKey(data.split("=")[1]);
+    append("Connected to " + remote_key);
+    return;
+  }
+  append(data, "B");
 }
 
 function onError(error) {
