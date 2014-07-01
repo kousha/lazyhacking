@@ -3,7 +3,7 @@
 <script type="text/javascript" src="/_ah/channel/jsapi"></script>
 </head>
 <body>
-<img src="https://chart.googleapis.com/chart?cht=qr&choe=UTF-8&chs=256x256&chl={{.key}}" alt="{{.key}}"></img>
+<img id="qrcode" src="" alt="{{.key}}"></img>
 <br />
 <code>{{.key}}</code>
 <br />
@@ -18,7 +18,11 @@
 <script>
 key = "{{.key}}";
 token = "{{.token}}";
+QR_CODE_URL_PREFIX = "https://chart.googleapis.com/chart?cht=qr&choe=UTF-8&chs=256x256&chl="
 remote_key = "";
+
+qrcode_url = QR_CODE_URL_PREFIX + encodeURIComponent(document.location.origin + "/#" + key);
+document.getElementById("qrcode").src = qrcode_url;
 
 num_message = 0;
 SEND_URL = document.location.origin + "/send";
